@@ -2,14 +2,14 @@
 
 This code is port from sample code of Go blog post [Go Concurrency Patterns: Pipelines and cancellation](http://blog.golang.org/pipelines)'s Bounded parallelism section [sample code](http://blog.golang.org/pipelines/bounded.go)
 
-I made the fanout pattern sample code reusable, So you can easily write parallel code without worry about `fatal error: all goroutines are asleep - deadlock!`, Which I encoutered quite often when trying to write parallel code, and difficult to figure out why.
+I made the fanout pattern sample code reusable, So you can easily write parallel code without worry about `fatal error: all goroutines are asleep - deadlock!`, Which I encountered quite often when trying to write parallel code, and difficult to figure out why.
 
 From the blog post:
 
 > Multiple functions can read from the same channel until that channel is closed; this is called fan-out. This provides a way to distribute work amongst a group of workers to parallelize CPU use and I/O.
 
 
-For a big list of data, You want to go though each of them and do something with them in parallel. and get the result for each of them to another list for later. But normally you don't start a new goroutine for each one them, Because that would eat too much memory. This package made write this kind of program easier.
+For a big list of data, You want to go though each of them and do something with them in parallel. and get the result for each of them to another list for later use. But normally you don't start a new goroutine for every one of them, Because you might don’t know how big is the list, and if it’s too big, that would eat too much memory. This package made write this kind of program easier.
 
 
 ## API
@@ -23,9 +23,9 @@ The package contains these two public api:
 
 1. `Worker` is the custom code you want to run,
 2. `ParallelRun` start to run the `Worker`
-   - `workerNum`: start how many goroutines to comsume the inputs list
+   - `workerNum`: start how many goroutines to consume the inputs list, it could be larger than your list size, or smaller, If it’s larger, some of the goroutines will run empty because can’t get input to work from the channel.
    - `inputs`: the inputs list that you first need to convert your list to `[]interface{}`
-   - `results`: the result list that returned from the `Worker`
+   - `results`: the result list that returned from the `Worker`, you normally want to go through them and cast them back to your the real type the `Worker` actually returns.
 
 
 ## Example: Check my ideal domain is available or not
@@ -50,9 +50,9 @@ For example, I have a text file contains Chinese words like this
 ```
 
 
-I want to do first to convert the word to PinYin, and then suffix `.com`, Then use `whois` to all of them to see if they are still available. So that if they are, I can quickly register it.
+I want to do first to convert the word to PinYin, and then suffix `.com`, Then use `whois` command to all of them to see if they are still available. So that if they are, I can quickly register it.
 
-The non parallel program will look like this:
+The non-parallel slow program will look like this:
 
 ```
 
