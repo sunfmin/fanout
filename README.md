@@ -2,9 +2,14 @@
 
 This code is port from sample code of Go blog post [Go Concurrency Patterns: Pipelines and cancellation](http://blog.golang.org/pipelines)'s Bounded parallelism section [sample code](http://blog.golang.org/pipelines/bounded.go)
 
-I made the fanout pattern code reusable, So you can easily write parallel code without worry about `fatal error: all goroutines are asleep - deadlock!`, Which I encoutered quite often when trying to write parallel code, and difficult to figure out why.
+I made the fanout pattern sample code reusable, So you can easily write parallel code without worry about `fatal error: all goroutines are asleep - deadlock!`, Which I encoutered quite often when trying to write parallel code, and difficult to figure out why.
 
-Say you have a big list of data, You want to go though each of them and do something with them. And get the result for each of them to another list.
+From the blog post:
+
+> Multiple functions can read from the same channel until that channel is closed; this is called fan-out. This provides a way to distribute work amongst a group of workers to parallelize CPU use and I/O.
+
+
+For a big list of data, You want to go though each of them and do something with them in parallel. and get the result for each of them to another list for later. But normally you don't start a new goroutine for each one them, Because that would eat too much memory. This package made write this kind of program easier.
 
 
 ## API
