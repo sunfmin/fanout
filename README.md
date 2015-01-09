@@ -14,7 +14,7 @@ For a big list of data, You want to go though each of them and do something with
 
 ## API
 
-```
+```go
 type Worker func(input interface{}) (result interface{}, err error)
 func ParallelRun(workerNum int, w Worker, inputs []interface{}) (results []interface{}, err error) {
 ```
@@ -54,7 +54,7 @@ I want to do first to convert the word to PinYin, and then suffix `.com`, Then u
 
 The non-parallel slow program will look like this:
 
-```
+```go
 
 for _, word := range domainWords {
 	py := pinyin.Convert(word)
@@ -112,7 +112,7 @@ go get github.com/sunfmin/fanout
 
 And with one call, you get it all parallel:
 
-```
+```go
 inputs := []interface{}{}
 
 
