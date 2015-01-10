@@ -1,13 +1,11 @@
-/*
-	fanout package provide a simple way for people who are difficult to write concurrency program that use
-	channels + goroutines + WaitGroup combination. I often find it difficult to write correctly.
-	more documentation and example at: https://github.com/sunfmin/fanout
+/*Package fanout package provide a simple way for people who are difficult to write concurrency program that use
+channels + goroutines + WaitGroup combination. I often find it difficult to write correctly.
+more documentation and example at: https://github.com/sunfmin/fanout
 */
 package fanout
 
 import (
 	"errors"
-	// "fmt"
 	"sync"
 )
 
@@ -56,16 +54,17 @@ func work(done <-chan int, inputs <-chan interface{}, c chan<- resultWithError, 
 	}
 }
 
+// Worker is the interface to be implemented when using this helper package
 // If the Worker func needs to have multiple params, You can wrap them into one struct,
 // Also for multiple result, You can wrap them into one result struct,
 // In Worker, If it return any error, All the other workers will stop immediately.
 // If you want to ignore Error in some of the workers, Then return nil error in your Worker func.
-type Worker func(input interface{}) (result interface{}, err error)
+type Worker func(input interface{}) (interface{}, error)
 
-// It start `workerNum` of goroutines immediately to consume the value of inputs, and provide input to `Worker` func.
+// ParallelRun starts `workerNum` of goroutines immediately to consume the value of inputs, and provide input to `Worker` func.
 // and run the `Worker`, If any worker finish, it will put the result value into a channel, then append to the results value.
 // The func will block the execution and wait for all goroutines to finish, then return results all together.
-func ParallelRun(workerNum int, w Worker, inputs []interface{}) (results []interface{}, err error) {
+func ParallelRun(workerNum int, w Worker, inputs []interface{}) ([]interface{}, error) {
 	// closes the done channel when it returns; it may do so before
 	// receiving all the values from c and errc.
 	done := make(chan int)
@@ -92,6 +91,7 @@ func ParallelRun(workerNum int, w Worker, inputs []interface{}) (results []inter
 		close(c)
 	}()
 
+	results := []interface{}{}
 	for r := range c {
 		if r.err != nil {
 			return nil, r.err
@@ -104,5 +104,5 @@ func ParallelRun(workerNum int, w Worker, inputs []interface{}) (results []inter
 		return nil, err
 	}
 
-	return
+	return results, nil
 }
