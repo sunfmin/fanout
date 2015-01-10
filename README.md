@@ -97,6 +97,10 @@ for _, word := range domainWords {
 	pydowncase := strings.ToLower(py)
 	domain := pydowncase + ".com"
 	outr, err := domainAvailable(word, domain)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		continue
+	}
 
 	if outr.available {
 		fmt.Printf("[Ohh Yeah] %s %s\n", outr.word, outr.domain)
@@ -104,9 +108,6 @@ for _, word := range domainWords {
 		fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
 	}
 
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
 }
 
 type checkResult struct {
@@ -174,15 +175,15 @@ results, err2 := fanout.ParallelRun(60, func(input interface{}) (interface{}, er
 	pydowncase := strings.ToLower(py)
 	domain := pydowncase + ".com"
 	outr, err := domainAvailable(word, domain)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return nil, nil
+	}
 
 	if outr.available {
 		fmt.Printf("[Ohh Yeah] %s %s\n", outr.word, outr.domain)
 	} else {
 		fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
-	}
-
-	if err != nil {
-		fmt.Println("Error: ", err)
 	}
 
 	return outr, nil
