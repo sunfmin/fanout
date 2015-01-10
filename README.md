@@ -194,5 +194,12 @@ fmt.Println("Finished ", len(results), ", Error:", err2)
 
 The full runnable code is here: https://github.com/sunfmin/domaincheck/blob/master/main.go
 
+## Q&A
+
+1. Does `fanout.ParallelRun` block execution?
+
+   Yes, it does, It will wait until all the goroutines it started to finish, then collect all the results into the returned []interface{} value, and you might want to unwrap it and sort it for later use.
+
+
 Enjoy!
 
