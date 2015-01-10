@@ -1,4 +1,4 @@
-## Fanout - make writing parallel code easier
+## Fanout - make writing parallel code even easier
 
 This code is port from sample code of Go blog post [Go Concurrency Patterns: Pipelines and cancellation](http://blog.golang.org/pipelines)'s Bounded parallelism section [sample code](http://blog.golang.org/pipelines/bounded.go)
 
@@ -27,47 +27,49 @@ The package contains these two public api:
    - `inputs`: the inputs list that you first need to convert your list to `[]interface{}`
    - `results`: the result list that returned from the `Worker`, you normally want to go through them and cast them back to your the real type the `Worker` actually returns.
 
-## A Chart to describe how it works
+
+## A chart to describe how it works
 
 After you fire up the `ParallelRun` func, It will instantly start the `workerNum` goroutines, and start to simultaneously work on the Inputs List. After all workers finished without error, It will return the results list. If any of the workers return error. All the other workers will immediately stop and return the first error to `ParallelRun`
 
 
 ```
 
-   ParallelRun method:              +------------------+
-                                    |                  |++
-                                 +-+|     worker 1     | |
-                                 |  +------------------+ |
-                                 |  |                  | |
-                                 |  |     worker 2     | |
-                                 |  +------------------+ |
-                                 |  |                  | |
-        Inputs List              |  |     worker 3     | |    Output List (random order)
-                                 |  +------------------+ |
-   +------------------------+    +  |                  | +    +----+----+----+----+----+
-   | 1  | 2  | 3  | 4  | 5  |  +-   |     worker 4     |  --> | o1 | o2 | o3 | o4 | o5 |
-   +----+----+----+----+----+    +  +------------------+ +    +----+----+----+----+----+
-                                 |  |                  | |
-                                 |  |     worker 5     | |
-                                 |  +------------------+ |
-                                 |  |                  | |
-                                 |  |     worker 6     | |
-                                 |  +------------------+ |
-                                 |  |                  | |
-                                 |  |     worker 7     | |
-                                 |  +------------------+ |
-                                 |  |                  | |
-                                 |  |     worker 8     | |
-                                 |  +------------------+ |
-                   workerNum: 9  |  |                  | |
-                                 +-+|     worker 9     |++
-                                    +------------------+
+                                   (goroutines)
+ParallelRun method:            +------------------+
+                               |                  |
+                             ++|     worker 1     |++
+                             | +------------------+ |
+                             | |                  | |
+                             | |     worker 2     | |
+                             | +------------------+ |
+                             | |                  | |
+     Inputs List             | |     worker 3     | |    Output List (random order)
+                             | +------------------+ |
++------------------------+   + |                  | +    +----+----+----+----+----+
+| 1  | 2  | 3  | 4  | 5  | +-  |     worker 4     |  --> | o1 | o2 | o3 | o4 | o5 |
++----+----+----+----+----+   + +------------------+ +    +----+----+----+----+----+
+                             | |                  | |
+                             | |     worker 5     | |
+                             | +------------------+ |
+                             | |                  | |
+                             | |     worker 6     | |
+                             | +------------------+ |
+                             | |                  | |
+                             | |     worker 7     | |
+                             | +------------------+ |
+                             | |                  | |
+                             | |     worker 8     | |
+                             | +------------------+ |
+            workerNum: 9     | |                  | |
+                             ++|     worker 9     |++
+                               +------------------+
 
 ```
 
 
 
-## Example: Check my ideal domain is available or not
+## Example: check my ideal domain is available or not
 
 For example, I have a text file contains Chinese words like this
 
