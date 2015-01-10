@@ -104,10 +104,10 @@ for _, word := range domainWords {
 
 	if outr.available {
 		fmt.Printf("[Ohh Yeah] %s %s\n", outr.word, outr.domain)
-	} else {
-		fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
-	}
-
+		continue
+    }
+	
+	fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
 }
 
 type checkResult struct {
@@ -177,15 +177,14 @@ results, err2 := fanout.ParallelRun(60, func(input interface{}) (interface{}, er
 	outr, err := domainAvailable(word, domain)
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return nil, nil
+		return nil, err
 	}
 
 	if outr.available {
 		fmt.Printf("[Ohh Yeah] %s %s\n", outr.word, outr.domain)
-	} else {
-		fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
+		return outr, nil
 	}
-
+	fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
 	return outr, nil
 }, inputs)
 
