@@ -202,7 +202,7 @@ The full runnable code is here: https://github.com/sunfmin/domaincheck/blob/mast
 
 2. How does it make the program run faster?
 
-   For example there is a list contains 20 elements need to process, if the func for processing one elements takes exactly 1 second. In a non-parallel way, It basically will spend 20 seconds to do the work and show you the result of 20 elements. But by using `fanout.ParallelRun`, if you set the `workerNum` to be 20, It totally will only spend the longest execution time 1 second to finish the total 20 elements. So it's a 20x improvement. In reality it won't be exactly 20x improvement. But it maximize CPU usage and I/O throughput.
+   For example there is a list contains 20 elements need to process, if the func for processing one elements takes exactly 1 second. In a non-parallel way, It basically will spend 20 seconds to do the work and show you the result of 20 elements. But by using `fanout.ParallelRun`, if you set the `workerNum` to be 20, It totally will only spend the longest execution time 1 second to finish the total 20 elements. So it's a 20x improvement. In reality it won't be exactly a 20x improvement. But it will maximize CPU usage and I/O throughput.
 
 
 Enjoy!
