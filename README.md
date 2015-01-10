@@ -89,12 +89,24 @@ The non-parallel slow program will look like this:
 ```go
 
 for _, word := range domainWords {
+	if strings.TrimSpace(word) == "" {
+		continue
+	}
+
 	py := pinyin.Convert(word)
 	pydowncase := strings.ToLower(py)
 	domain := pydowncase + ".com"
+	outr, err := domainAvailable(word, domain)
 
-	ch, err := domainAvailable(word, domain)
-	println(ch)
+	if outr.available {
+		fmt.Printf("[Ohh Yeah] %s %s\n", outr.word, outr.domain)
+	} else {
+		fmt.Printf("\t\t\t %s %s %s\n", outr.word, outr.domain, outr.summary)
+	}
+
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 }
 
 type checkResult struct {
