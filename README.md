@@ -9,7 +9,7 @@ From the blog post:
 > Multiple functions can read from the same channel until that channel is closed; this is called fan-out. This provides a way to distribute work amongst a group of workers to parallelize CPU use and I/O.
 
 
-For a big list of data, You want to go though each of them and do something with them in parallel. and get the result for each of them to another list for later use. But normally you don't start a new goroutine for every one of them, Because you might don’t know how big is the list, and if it’s too big, that would eat too much memory. This package made write this kind of program easier.
+For a big list of data, You want to go though each of them and do something with them in parallel. and get the result for each of them to another list for later use. But normally you don't start a new goroutine for every one of them, Because you might don’t know how big the list is, and if it’s too big, that would eat too much memory. This package makes writing this kind of program easier.
 
 
 ## API
@@ -23,7 +23,7 @@ The package contains these two public api:
 
 1. `Worker` is the custom code you want to run,
 2. `ParallelRun` start to run the `Worker`
-   - `workerNum`: start how many goroutines to consume the inputs list, it could be larger than your list size, or smaller, If it’s larger, some of the goroutines will run empty because can’t get input to work from the channel.
+   - `workerNum`: how many goroutines to start consuming the inputs list, it could be larger than your list size, or smaller, If it’s larger, some of the goroutines will run empty because they can’t get input to work from the channel.
    - `inputs`: the inputs list that you first need to convert your list to `[]interface{}`
    - `results`: the result list that returned from the `Worker`, you normally want to go through them and cast them back to your the real type the `Worker` actually returns.
 
@@ -145,7 +145,7 @@ func domainAvailable(word string, domain string) (ch checkResult, err error) {
 
 ```
 
-This would be ridiculous slow, Because for each word, the program start to run command `whois`, and after it finish, It start to run next word. It would take days to run for example 30000 words.
+This would be ridiculously slow, Because for each word, the program start to run command `whois`, and after it finishes, It start to run next word. It would take days to run for example 30000 words.
 
 ## Change it to parallel with fanout
 
@@ -198,11 +198,11 @@ The full runnable code is here: https://github.com/sunfmin/domaincheck/blob/mast
 
 1. Does `fanout.ParallelRun` block execution?
 
-   Yes, it does, It will wait until all the goroutines it started to finish, then collect all the results into the returned []interface{} value, and you might want to unwrap it and sort it for later use.
+   Yes, it does, It will wait until all the running goroutines finish, then collect all the results into the returned []interface{} value, and you might want to unwrap it and sort it for later use.
 
 2. How does it make the program run faster?
 
-   For example there is a list contains 20 elements need to process, if the func for processing one elements takes exactly 1 second. In a non-parallel way, It basically will spend 20 seconds to do the work and show you the result of 20 elements. But by using `fanout.ParallelRun`, if you set the `workerNum` to be 20, It totally will only spend the longest execution time 1 second to finish the total 20 elements. So it's a 20x improvement. In reality it won't be exactly a 20x improvement. Because of the cores of CPU, and how intensive the program is using I/O. But it will maximize CPU usage and I/O throughput.
+   For example there is a list contains 20 elements need to process, if the func for processing one elements takes exactly 1 second. In a non-parallel way, It basically will spend 20 seconds to do the work and show you the result of 20 elements. But by using `fanout.ParallelRun`, if you set the `workerNum` to be 20, In total, it will only spend the longest execution time 1 second to finish the 20 elements. So it's a 20x improvement. In reality it won't be exactly a 20x improvement. Because of the cores of CPU, and how intensive the program is using I/O. But it will maximize CPU usage and I/O throughput.
 
 
 Enjoy!
