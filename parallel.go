@@ -21,7 +21,8 @@ func feedInputs(done <-chan int, inputs IArray) (<-chan interface{}, <-chan erro
 
 		// No select needed for this send, since errc is buffered.
 		errChan <- func() error {
-			for i := 0; i < inputs.Len(); i++ {
+			l := inputs.Len()
+			for i := 0; i < l; i++ {
 				select {
 				case inputsChan <- inputs.Get(i):
 				case <-done:
