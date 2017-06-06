@@ -11,7 +11,7 @@ import (
 
 // feedInputs starts a goroutine to loop through inputs and send the
 // input on the interface{} channel. If done is closed, feedInputs abandons its work.
-func feedInputs(done <-chan int, inputs []interface{}) (<-chan interface{}, <-chan error) {
+func feedInputs(done <-chan int, inputs IArray) (<-chan interface{}, <-chan error) {
 	inputsChan := make(chan interface{})
 	errChan := make(chan error, 1)
 
@@ -21,9 +21,9 @@ func feedInputs(done <-chan int, inputs []interface{}) (<-chan interface{}, <-ch
 
 		// No select needed for this send, since errc is buffered.
 		errChan <- func() error {
-			for _, input := range inputs {
+			for i := 0; i < inputs.Len(); i++ {
 				select {
-				case inputsChan <- input:
+				case inputsChan <- inputs.Get(i):
 				case <-done:
 					// fmt.Println("feedInput Done")
 					return errors.New("loop canceled")
@@ -54,6 +54,11 @@ func work(done <-chan int, inputs <-chan interface{}, c chan<- resultWithError, 
 	}
 }
 
+type IArray interface {
+	Get(int) interface{}
+	Len() int
+}
+
 // Worker is the interface to be implemented when using this helper package
 // If the Worker func needs to have multiple params, You can wrap them into one struct,
 // Also for multiple result, You can wrap them into one result struct,
@@ -64,7 +69,7 @@ type Worker func(input interface{}) (interface{}, error)
 // ParallelRun starts `workerNum` of goroutines immediately to consume the value of inputs, and provide input to `Worker` func.
 // and run the `Worker`, If any worker finish, it will put the result value into a channel, then append to the results value.
 // The func will block the execution and wait for all goroutines to finish, then return results all together.
-func ParallelRun(workerNum int, w Worker, inputs []interface{}) ([]interface{}, error) {
+func ParallelRun(workerNum int, w Worker, inputs IArray) ([]interface{}, error) {
 	// closes the done channel when it returns; it may do so before
 	// receiving all the values from c and errc.
 	done := make(chan int)

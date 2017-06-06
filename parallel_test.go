@@ -8,12 +8,21 @@ import (
 	"time"
 )
 
+type Values []inputVal
+
+func (this Values) Get(i int) interface{} {
+	return this[i]
+}
+func (this Values) Len() int {
+	return len(this)
+}
+
 func TestParallelRun(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
 
 	inputNum := 50
 
-	vals := []interface{}{}
+	var vals Values
 	for i := 0; i < inputNum; i++ {
 		vals = append(vals, inputVal{number: i, giveError: ""})
 	}
@@ -32,7 +41,7 @@ func TestParallelRunWithError(t *testing.T) {
 
 	inputNum := 20
 
-	vals := []interface{}{}
+	var vals Values
 	for i := 0; i < inputNum; i++ {
 		vals = append(vals, inputVal{number: i, giveError: ""})
 	}

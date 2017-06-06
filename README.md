@@ -16,15 +16,15 @@ For a big list of data, You want to go though each of them and do something with
 
 ```go
 type Worker func(input interface{}) (result interface{}, err error)
-func ParallelRun(workerNum int, w Worker, inputs []interface{}) (results []interface{}, err error) {
+func ParallelRun(workerNum int, w Worker, inputs IArray) (results []interface{}, err error) {
 ```
 
 The package contains these two public api:
-
+ 
 1. `Worker` is the custom code you want to run,
 2. `ParallelRun` start to run the `Worker`
    - `workerNum`: start how many goroutines to consume the inputs list, it could be larger than your list size, or smaller, If it’s larger, some of the goroutines will run empty because can’t get input to work from the channel.
-   - `inputs`: the inputs list that you first need to convert your list to `[]interface{}`
+   - `inputs`: the inputs is a interface which implemented two methods. `Len() int` and `Get(int) interface{}`
    - `results`: the result list that returned from the `Worker`, you normally want to go through them and cast them back to your the real type the `Worker` actually returns.
 
 
@@ -158,9 +158,18 @@ go get github.com/sunfmin/fanout
 And with one call, you get it all parallel:
 
 ```go
-inputs := []interface{}{}
 
+//define a new combination struct that implemented IArray.
+type Values []string
 
+func (this Values) Get(i int) interface{} {
+	return this[i]
+}
+func (this Values) Len() int {
+	return len(this)
+}
+
+var inputs Values
 for _, word:= range domainWords {
 	inputs = append(inputs, word)
 }
