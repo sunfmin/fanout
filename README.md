@@ -1,34 +1,3 @@
-#####  Dear sunfmin，
-#####  我是【溜达】的HR，我们正在为寻找优秀的GO语言开发者！
-#####  我在GitHub上看到您的作品，真诚的对您发出邀请，希望可以和您取得联系，获得一次和您交流的机会！
-#####  同时已向您的邮箱（sunfmin@gmail.com），发送了一封邀请函，希望能够得到您的回复！
-
-
-##### 以下是公司相关介绍：
-[![](https://static.lagou.com/thumbnail_300x300/i/image/M00/6A/19/CgpEMlmmlYSAQRDRAABAkrB_kQ8059.png)](https://www.52liuda.com/)
-*【溜达】—从这里开始，探索世界*
-
-我们相信在我们生活的物理空间内，有很多有意思的事物或人。
-
-我们相信太多有价值的信息就在我们身边但是都被我们错过。
-
-我们相信【溜达】是能够帮助我们察觉生活中那些即美好又精彩的事物，或者遇见一生中绝对不想错过的人。
-
-#### 【溜达】成立于2017年初，总部位于杭州，千万天使轮。在互联网领域已深耕十多年，在互联网营销和大数据方面有一整套独特的方法和工具。
-#### 创始人【国平】，从事在线营销15年，带领团队以咨询顾问的角色，帮助携程、阿里云等近40家知名互联网公司获得了很大的市场份额。我们的团队大牛与小鲜肉兼具，乐于面对各种技术难题，相信没有什么问题是不能通过技术手段解决的，也坚信只要有好的idea，碰撞上足够的创新和勤奋就能实现它。
-
-##### 我们提供高于行业的薪资和各种个性化福利待遇 ：
-* 弹性工作时间、上下班无需打卡
-* 社保五险、全额公积金、年终奖、绩效奖金、法定假日、假日礼物、带薪年假
-* 行业大牛CEO的独家内部培训分享会，助攻UP~!
-* 段位高级—超高能装备：升降支架，机械键盘，3D显示屏幕。
-* 不定期组织outing 漂流，轰趴，露营BBQ，旅游等等超酷团建项目
-* 免费购书无上限
-* 核心员工股权激励方案
-
-
-
-
 ## Fanout - make writing parallel code even easier
 
 This code is port from sample code of Go blog post [Go Concurrency Patterns: Pipelines and cancellation](http://blog.golang.org/pipelines)'s Bounded parallelism section [sample code](http://blog.golang.org/pipelines/bounded.go)
