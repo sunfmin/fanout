@@ -106,3 +106,36 @@ func ParallelRun(workerNum int, w Worker, inputs []interface{}) ([]interface{}, 
 
 	return results, nil
 }
+
+func ParallelRunCh(workerNum int, w Worker, inputsc chan interface{}) ([]interface{}, error) {
+	done := make(chan int)
+	defer close(done)
+
+	c := make(chan resultWithError)
+
+	var wg sync.WaitGroup
+	wg.Add(workerNum)
+
+	for i := 0; i < workerNum; i++ {
+		// fmt.Println("starting ", i)
+		go func() {
+			work(done, inputsc, c, w)
+			wg.Done()
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	results := []interface{}{}
+	for r := range c {
+		if r.err != nil {
+			return nil, r.err
+		}
+		results = append(results, r.result)
+	}
+
+	return results, nil
+}

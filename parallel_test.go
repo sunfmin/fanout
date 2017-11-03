@@ -45,6 +45,27 @@ func TestParallelRunWithError(t *testing.T) {
 	}
 }
 
+func TestParallelRunCh(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
+	inputNum := 20
+
+	vals := make(chan interface{})
+	go func() {
+		for i := 0; i < inputNum; i++ {
+			vals <- inputVal{number: i, giveError: ""}
+		}
+		close(vals)
+	}()
+
+	r, err := ParallelRunCh(inputNum, w, vals)
+
+	fmt.Println(r)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func errw(i interface{}) (r interface{}, e error) {
 	e = errors.New("I am an error")
 	return
